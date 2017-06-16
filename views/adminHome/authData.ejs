@@ -1,0 +1,100 @@
+<style>
+	table tr td:first-child{
+		text-align: left;
+		font-size:18px;
+		font-weight: bold;
+	}
+	table tr td img{
+		width:250px;
+		height:auto;
+	}
+</style>
+<script>
+function applyPass(){
+    if(confirm('确定审核通过吗?')){
+        location.href='/adminHome/applyPass?id=<%-rs.id%>';
+    }
+}
+function applyRefuse(){
+    $('#applyInfo').hide();
+    $('#refuseTable').show();
+}
+function onback(){
+    $('#refuseTable').hide();
+    $('#applyInfo').show();
+}
+</script>
+
+<table id='applyInfo' class='table table-hover table-bordered'>
+    <tr>
+        <td colspan='2' align="center" style='text-align: center;'>
+            用户申请数据
+        </td>
+    </tr>
+    <tr>
+        <td >真名  </td>
+        <td>
+            <%-rs.realname%>
+        </td>
+    </tr>
+    <tr>
+        <td >身份证号</td>
+        <td>
+            <%-rs.idcode%>
+        </td>
+    </tr>
+    <tr>
+        <td >电话</td>
+        <td>
+            <%-rs.phone%>
+        </td>
+    </tr>
+    <tr>
+        <td >email</td>
+        <td>
+            <%-rs.email%>
+        </td>
+    </tr>
+    <tr>
+        <td >地址</td>
+        <td>
+            <%-rs.address%>
+        </td>
+    </tr>
+    <tr>
+        <td '>身份证照片</td>
+        <td align="center">
+            <img src="<%-rs.idphoto%>"/>
+        </td>
+    </tr>
+    <tr>
+        <td >手持身份证照片</td>
+        <td align="center">
+            <img src="<%-rs.userphoto%>"/>
+        </td>
+    </tr>
+    <tr>
+        <td  colSpan='2' style='text-align: center;'>
+            <input type="button" class="btn btn-success" value='审核通过' onclick='applyPass()'/>&nbsp;&nbsp;&nbsp;
+            <input type="button" class="btn btn-danger" value='审核驳回' onclick="applyRefuse()"/>
+        </td>
+    </tr>
+</table>
+
+<form id='refuseTable' name='refuseTable' method="post" action='/adminHome/applyRefuse'  style='display:none'>
+	<table  height='240' align='center'>
+		<tr>
+		    <td>
+		        驳回理由:<br/>
+		        <textarea name='message' cols='50' rows='5'></textarea>
+		    </td>
+		</tr>
+		<tr>
+		    <td style='text-align: center;'>
+			    <input type='hidden' name='id' value='<%-rs.id%>'/>
+			    <input type="submit" class="btn btn-danger" value='驳回'/>&nbsp;&nbsp;&nbsp;
+			    <input type="button" class="btn btn-success" value='返回' onclick='onback()'/>
+		    </td>
+		</tr>
+	</table>
+</form>

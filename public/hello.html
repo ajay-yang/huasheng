@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script>
+	$(function(){
+		//$('#d2 .c1').val('aaa');
+		
+	});
+	function onlogin(){
+		//alert('提交');
+		//$('#d1').load('http://localhost/');
+		$.post('/users/login',$('#myform').serialize(),function(retxt){
+			//alert(rehtml);
+			$('#d1').html(retxt);
+		});
+		return false;
+	}
+  </script>
+ </head>
+ <body>
+	<div id='d1' style='border:1px solid green;width:600px;'>
+		<input type='text' class='c1'/><br/>
+		<input type='text'/><br/>
+	</div>
+	<div id='d2'>
+		<form id='myform' action='http://localhost/users/login' method='post' onSubmit='return onlogin();'>
+		<table border='1' align='center'>
+			<tr>
+				<td align='right'>email:</td>
+				<td><input type='text' name="email"> </td>
+			</tr>
+			<tr>
+				<td align='right'>密码:</td>
+				<td><input type='text' name="pwd"> </td>
+			</tr>
+			<tr>
+				<td align='center' colspan='2'>
+					<input type='submit' value='登陆'/>
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+ </body>
+</html>

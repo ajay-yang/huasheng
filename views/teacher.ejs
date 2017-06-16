@@ -1,0 +1,132 @@
+<% include header %>
+<script>
+function chapter(id,thisa){
+  title = thisa.parentElement.parentElement.children[0].children[0].innerText;
+  //alert($(thisa).parent().parent().children(":first").children(":first").html());
+  location.href='/teacher/chapter?id='+id+'&title='+title;
+}
+function review(cid){
+  if(confirm('课程提交后审核中不可更改,确定提交吗？')){
+      location.href="/teacher/reviewcourse?cid="+cid;
+  }
+}
+</script>
+<div class="row" style='height: 93%'>
+      <div class="col-xs-1 col-sm-1 col-md-1">
+      </div>
+
+      <div class="col-xs-2 col-sm-2 col-md-2" style='background:yellow;height:100%'>
+      	<table height='100%' align='center'>
+      		<tr><td>关注的课程</td></tr>
+      		<tr><td>关注的讲师</td></tr>
+      		<tr><td>学习进度</td></tr>
+      		<tr><td>同学圈</td></tr>
+      		<tr><td>
+      		<% if(loginbean.role==1){ %>
+      			<a href='#' onclick='apply()'>申请成为讲师</a>
+      		<% }else if(loginbean.role==2){ %>
+      			<a href='#'>讲师资格审核中</a>
+      		<% }else if(loginbean.role==3){ %>
+      			<a href='/teacher/'>我的教学</a>
+      		<% } %>
+      		</td></tr>
+      	</table>
+      </div>
+
+      <div id='main' class="col-xs-8 col-sm-8 col-md-8" style='border: 1px solid green;height:100%'>
+      		<table class="table table-condensed">
+			  <caption>我的教学课程</caption>
+			  <tbody>
+			  	<thead>
+				    <tr>
+				      <th>课程名称</th>
+				      <th>课程状态</th>
+				      <th>是否完结</th>
+              <th>发布时间</th>
+				      <th>
+				      		操作&nbsp;&nbsp;&nbsp;&nbsp;
+				      		<a href='/teacher/pubcourse'><button type="button" class="btn btn-success">发布课程</button></a>
+
+				      </th>
+				    </tr>
+				  </thead>
+			  	<% coursers.forEach(function(item){ %>
+			    <tr>
+			      <td>
+                <div><%-item.title%></div>
+			      		<img src='../<%-item.logo%>'>
+			      </td>
+			      <td>
+			      		<% if(item.status==0){ %>
+                编辑中
+                <% }else if(item.status==1){ %>
+                 审核中
+                <%}%>
+			      </td>
+            <td>
+              <% if(item.status>0){ %>
+                完结
+                <% }else{ %>
+                未完结
+                <%}%>
+            </td>
+			      <td>
+			      		<%-item.pubtime.getFullYear()%>年<%-(item.pubtime.getMonth()+1)%>月<%-item.pubtime.getDate()%>日
+			      		<%-item.pubtime.getHours()%>:<%-item.pubtime.getMinutes()%>
+			      </td>
+			      <td>
+                <% if(item.status==0){ %>
+			      		<button type="button" class="btn btn-warning" onclick='chapter("<%-item._id%>",this)'>章节管理</button>&nbsp;
+			      		<button type="button" class="btn btn-warning" onclick='review("<%-item._id%>")'>申请审核</button>
+                <%}%>
+			      </td>
+			    </tr>
+			    <% })%>
+			  </tbody>
+			</table>
+      </div>
+
+      <div class="col-xs-1 col-sm-1 col-md-1">
+      </div>
+</div>
+
+<div class="modal fade" id="msgModal">
+    <div class="modal-dialog">
+        <div class="modal-content" id='replydiv
+
+
+
+        ' style='display:none'>
+        	<div class="modal-header" style='text-align: center'>
+        		回复:<span id='replyname'></span>
+        	</div>
+        	<div class="modal-body" style='text-align: center'>
+	            <form id='replyform' name='replyform' onsubmit="return replySub();">
+		            <textarea cols='76' rows='9' name='message'></textarea><br/>
+		            <input type='hidden' name='rid'/>
+		            <input type='submit' value='回复'/>&nbsp;
+		            <input type='button' value='取消'/>
+	            </form>
+            </div>
+            <div class="modal-footer" style='text-align:center'>
+            	&nbsp;
+            </div>
+        </div><!-- /.modal-content -->
+        <div class="modal-content" id='senddiv'>
+        	<div class="modal-header" style='text-align: center'>
+        	发送消息
+        	</div>
+        	<div class="modal-body" style='text-align: center'>
+	            <form id='sendform' name='sendform' onsubmit="return sendSub();">
+	            接受者昵称:<input type="text" placeholder="请输入昵称" name='nicheng'/><br/><br/>
+	            	<textarea cols='76' rows='9' name='message'></textarea><br/>
+	            	<input type='submit' value='发送'/>&nbsp;
+	            	<input type='button' value='取消'/>
+	            </form>
+            </div>
+            <div class="modal-footer" style='text-align:center'>
+            	&nbsp;
+            </div>
+        </div>
+    </div><!-- /.modal -->
+<% include footer %>

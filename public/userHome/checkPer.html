@@ -1,0 +1,168 @@
+<script>
+function idphotoChange(thisa,imgId){
+    if (typeof FileReader === 'undefined') {  
+        alert('你的浏览器不支持FileReader接口！');  
+        return;  
+    }
+    var file = thisa.files[0];
+    if(!/image\/\w+/.test(file.type)){  
+        alert("看清楚,这个需要图片！"); 
+        return false;
+    }
+    var reader = new FileReader();  
+    //将文件以Data URL形式读入页面  
+    reader.readAsDataURL(file);
+    reader.onload=function(e){  
+        //显示文件  
+        var img = document.getElementById(imgId);
+        img.src = this.result;
+    }
+}
+</script>
+<style>
+	.showPhoto{
+		width:100px;
+		text-align:center;
+		height:100px;
+	}
+	.showPhoto img{
+		width:90px;
+		height:auto;
+	}
+	
+</style>
+
+
+<ul id="myTab" class="nav nav-tabs">
+	<li class="active">
+		<a href="#private" data-toggle="tab">
+			 个人认证
+		</a>
+	</li>
+	<li>
+		<a href="#company" data-toggle="tab">
+			单位认证
+		</a>
+	</li>
+</ul>
+
+
+<div id="myTabContent" class="tab-content">
+	<div class="tab-pane fade in active" id="private">
+		<form action="/userHome/privateAuth" method="post" enctype="multipart/form-data">
+			<table  align="left" class="table table-hover table-bordered" style='width:800px;'>
+                <tr>
+                	<td align='right'>真实姓名 </td>
+                    <td colspan="2">
+                    	<input type="text" name="realname" class="form-control"   placeholder="请输入姓名">
+                    </td>
+                </tr>   
+                 <tr>
+                <td align='right'>身份证号  </td>
+                    <td colspan="2">
+                    	<input type="text" name="idcode" class="form-control"   placeholder="请输入身份证号">
+                    </td>
+                </tr>
+                <td align='right'>手机号  </td>
+                    <td colspan="2">
+                    <input type="text" name="phone" class="form-control"   placeholder="请输入手机号">
+                    </td>
+                </tr>
+                <td align='right'>邮箱  </td>
+                    <td colspan="2">
+                    <input type="text" name="email" class="form-control"   placeholder="请输入邮箱">
+                    </td>
+                </tr>
+                 <tr>
+                <td align='right'>地址  </td>
+                    <td colspan="2">
+                    <input type="text" name="address" class="form-control"   placeholder="请输入地址">
+                    </td>
+                </tr>
+                	<td align='right'>身份证照片 </td>
+                    <td>
+						<input type="file"  name='idphoto' onChange='idphotoChange(this,"idphotoView")'>
+                    </td>
+                    <td  class='showPhoto'>
+                		<img id='idphotoView'/>
+                	</td>
+                </tr>
+                <tr>
+                	
+                </tr>
+                	<td align='right'>手持身份证照片 </td>
+                    <td>         
+						<input type="file"  name='userphoto' onChange='idphotoChange(this,"myphotoView")'>
+                    </td>
+                    <td  class='showPhoto'>
+                		<img id='myphotoView'/>
+                	</td>
+                </tr>
+                 <tr >
+                    <td colspan="4" align="center">
+                    <button type="submit" class="btn btn-success">提交信息</button>    
+                    </td>
+                </tr>
+            </table>
+		</form>
+	</div>
+	
+	<div class="tab-pane fade" id="company">
+		<form action="/userHome/privateAuth" method="post" enctype="multipart/form-data">
+			<table  align="left" class="table table-hover table-bordered" style='width:800px;'>
+                <tr>
+                	<td align='right'>真实姓名 </td>
+                    <td colspan="2">
+                    	<input type="text" name="realname" class="form-control"   placeholder="请输入姓名">
+                    </td>
+                </tr>   
+                 <tr>
+                <td align='right'>身份证号  </td>
+                    <td colspan="2">
+                    	<input type="text" name="idcode" class="form-control"   placeholder="请输入身份证号">
+                    </td>
+                </tr>
+                <td align='right'>手机号  </td>
+                    <td colspan="2">
+                    <input type="text" name="phone" class="form-control"   placeholder="请输入手机号">
+                    </td>
+                </tr>
+                <td align='right'>邮箱  </td>
+                    <td colspan="2">
+                    <input type="text" name="email" class="form-control"   placeholder="请输入邮箱">
+                    </td>
+                </tr>
+                 <tr>
+                <td align='right'>地址  </td>
+                    <td colspan="2">
+                    <input type="text" name="address" class="form-control"   placeholder="请输入地址">
+                    </td>
+                </tr>
+                	<td align='right'>身份证照片 </td>
+                    <td>
+						<input type="file"  name='idphoto' onChange='idphotoChange(this,"idphotoView")'>
+                    </td>
+                    <td  class='showPhoto'>
+                		<img id='idphotoView'/>
+                	</td>
+                </tr>
+                <tr>
+                	
+                </tr>
+                	<td align='right'>手持身份证照片 </td>
+                    <td>         
+						<input type="file"  name='userphoto' onChange='idphotoChange(this,"myphotoView")'>
+                    </td>
+                    <td  class='showPhoto'>
+                		<img id='myphotoView'/>
+                	</td>
+                </tr>
+                 <tr >
+                    <td colspan="4" align="center">
+                    <button type="submit" class="btn btn-success">提交信息</button>    
+                    </td>
+                </tr>
+            </table>
+		</form>
+	</div>
+</div>

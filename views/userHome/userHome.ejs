@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+    <script src="/javascripts/jquery-2.1.4.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+		.sideBar{
+			text-align: center;
+			margin-top:-21px;
+		}
+		.userPhoto{
+			background-color:#B5E61D;
+			height: 150px;
+		}
+		.userPhoto a{
+			background-size: cover;
+			background-image:url(../images/touX2.jpg);
+			border-radius: 50%;
+			margin:10px auto;
+			display: block;
+			width:110px;
+			height:110px;
+		}
+		.paginationer{
+			color:forestgreen
+		}
+		.paginationer li{
+			margin:0px 10px;
+		}
+		tbody{
+			border:1px solid red;
+		};
+	</style>
+  	<script>
+		function replayMes(thisa,rid){
+			$('#sendMessageForm').hide();
+			$('#replayMessageForm').show();
+			$('#replayName').val(thisa.parentElement.parentElement.children[0].innerText);
+		}
+		function sendMes(){
+			$('#sendMessageForm').show();
+			$('#replayMessageForm').hide();
+		}
+		function checkPer(){
+			$('#checkPer').load('/userHome/checkPer.html');
+		}
+		function sendMessageForm(){
+			$.post('/msg/sendMessage',$('#sendMessageForm').serialize(),function(rehtml){
+				if(rehtml==1){
+					alert('发送成功');
+					$('#myModal').modal('hide');
+				}else if(rehtml==-1){
+					alert('昵称不存在哦')
+				}else{
+					alert('发送失败');
+				}
+			});
+				return false;
+		};	
+		function replayMessageForm(){
+			$.post('/msg/replayMessage',$('#replayMessageForm').serialize(),function(rehtml){
+				if(rehtml==1){
+					alert('发送成功');
+					
+					$('#myModal').modal('hide');
+				}else{
+					alert('发送失败');
+				}
+			});
+				return false;
+		};
+		function deleteMessage(deid){
+			if(confirm('确认删除此条记录吗?')){
+				location.href="/msg/deleteMessage?id="+deid;
+			}
+		}
+		function showBei(){
+			$('#showBei').show(200);
+		}
+		function hideBei(){
+			$('#showBei').hide(200);
+		}
+  	</script>
+</head>
+<body>
+  	<%include ../ui/head%>
+  	<div class='row'>
+  		<div class='col-sm-3 col-md-3 sideBar '>
+		  	<% include sideBar %>
+  		</div>
+  		
+  		<div class='col-sm-9 col-md-9' id='checkPer'>
+  			<table class="table table-bordered">
+			   <caption>
+			   		<span style='font-size:18px;font-weight: bold;'>用户消息列表</span>
+			   	<button type="button"  onclick='sendMes()' data-toggle="modal" data-target="#myModal" class='btn btn-info'style='float:right;margin-right:10px;'/>
+			   		新消息
+			   	</button>
+			   </caption>
+			   	<thead>
+			      	<tr>
+				      <th>发送者</th>
+				      <th>内容</th>
+				      <th>发送时间</th>
+				      <th>操作</th>
+			    	</tr>
+			  	</thead>
+			  	<tbody>
+			  		<% rs.forEach(function(row){ %>
+				    <tr>
+				      <td><%-row.nicheng%></td>
+				      <td><%-row.message%></td>
+				      <td>
+				      	<%
+				      		time = row.createtime;
+				      	%>
+					      <%-time.getFullYear()%>年
+					      <%-time.getMonth()+1%>月
+					      <%-time.getDate()%>日
+					      <%-time.getHours() %>时
+					      <%-time.getMinutes() %>分
+				      </td>
+				      <td>
+				      	<button class='btn btn-info' data-toggle="modal" data-target="#myModal" onclick='replayMes(this,<%-row.sendid%>)'>回复</button>
+				      	<button class='btn btn-danger' onclick='deleteMessage("<%-row.id%>")'>删除</button>
+				      </td>
+				    </tr>
+				    
+			    	<% }) %>
+			  	</tbody>
+			  	<tfoot>
+<!---------------------------分页---------------------->
+			   		 <% pageNum = parseInt(pageNum) %>
+			   		<tr>
+				    	<td colspan="4" align="center">
+				    		<ul class="pagination">
+				    			<li><a href="./?pageNum=1">首页</a></li>
+				    			<%if(pageNum > 1){%>
+							    <li class="previous"><a href="./?pageNum=<%-pageNum -1%> ">上一页</a></li>
+							    <%}%>
+							    <%if(pageNum < sumPage){%>
+							    	<% for(i=2;i<=sumPage;i++){ %>
+						    		 <li><a href="./?pageNum=<%-i %>"><%-i %></a></li>
+						    		 <% } %>
+								    <li class="next"><a href="./?pageNum=<%-pageNum +1 %>">下一页</a></li>
+								    <li><a href="./?pageNum=<%-sumPage%>">末页</a></li>
+							    <%}%>
+							    
+							</ul>
+							<ul class='paginationer'>
+								<li>
+									共<%-rowCount%>条消息
+								</li>
+								<li>
+									第<%-pageNum%>/<%-sumPage%>页
+								</li>
+							</ul>
+				    	</td>
+				    </tr>
+			  	</tfoot>
+			</table>
+  		</div>
+  	</div>
+
+  	
+  	<!--模态框-->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		    <div class="modal-content">
+		    	<!--发布新消息-->
+		    	<form  id='sendMessageForm' name='sendMessage' method='post'  onsubmit="return sendMessageForm();">
+		    		<div class="modal-header">
+		            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			            <h4 class="modal-title" id="myModalLabel">发布消息</h4>
+			        </div>
+			        <div class="modal-body">
+			        	<div class="form-group">
+						    <label >接受者昵称</label>
+						    <input type="text"  class="form-control" name="nicheng" placeholder="请输入接受者昵称" onfocus="showBei()" onblur="hideBei()">
+						    <span style='display: none;color:red;' id='showBei'>回复多人请用( ; )分割</span>
+					   	</div>
+					    <div class="form-group">
+					    	<label >发送内容</label>
+					    	<textarea class="form-control" align='center' name="message"  cols='69' rows='5' placeholder="请输入发送内容">
+				    		</textarea>
+					  	</div>
+			        </div>
+			        <div class="modal-footer">
+			            <div class="modal-footer">
+				            <button type="button" class="btn btn-default" data-dismiss="modal" >
+				            	关闭
+				            </button>
+				            <button type="submit" class="btn btn-success" >
+				            	发送
+			            	</button>
+			        	</div>
+			        </div>
+		    	</form>
+		    	
+		    	
+		    	<!--回复消息-->
+		    	<form id='replayMessageForm' name='replayMessage' method='post' onsubmit="return replayMessageForm();" style='display: none;'>
+		    		<div class="modal-header">
+		            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			            <h4 class="modal-title" id="myModalLabel">回复消息</h4>
+			        </div>
+			        <div class="modal-body">
+			        	<div class="form-group">
+						    <label >接受者昵称</label>
+						    <input type="text" class="form-control" name="rnicheng" id='replayName' placeholder="请输入接受者昵称">
+					   	</div>
+					    <div class="form-group">
+					    	<label >发送内容</label>
+					    	<textarea class="form-control" name="rmessage"  cols='69' rows='5' placeholder="请输入发送内容">
+				    		</textarea>
+					  	</div>
+			        </div>
+			        <div class="modal-footer">
+			             <button type="button" class="btn btn-default" data-dismiss="modal" >
+				            	关闭
+			            </button>
+			            <button type="submit" class="btn btn-success" >
+			            	发送
+		            	</button>
+			        </div>
+		    	</form>
+		    	
+		    </div>
+		</div>
+	</div>	
+</body>
+</html>

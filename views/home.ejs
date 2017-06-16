@@ -1,0 +1,151 @@
+<% include header %>
+<script>
+function apply(){
+	$('#main').load('/home/apply');
+}
+
+function reply(rid,rname){
+			 
+			 $('#senddiv').hide();
+			 $('#replydiv').show();
+			 replyform.rid.value=rid;
+			 $('#replyname').html(rname);
+			 $('#msgModal').modal();	
+}
+function replySub(){
+	$.post('/msg/reply',$('#replyform').serialize(),function(rehtml){
+		if(rehtml==1){
+			alert('回复成功');
+			$(".modal-backdrop").remove(); //消除遮罩层
+			$('#msgModal').modal('hide');
+		}else{
+			alert('回复失败');
+		}
+	});
+	return false;
+}
+function sendMsg(){
+	$('#senddiv').show();
+	$('#replydiv').hide();
+	$('#msgModal').modal();
+}
+function sendSub(){
+	$.post('/msg/sendmsg',$('#sendform').serialize(),function(rehtml){
+		if(rehtml==1){
+			alert('发送成功');
+			$(".modal-backdrop").remove(); //消除遮罩层
+			$('#msgModal').modal('hide');
+		}else if(rehtml==-1){
+			alert('没有这个昵称');
+		}else{
+			alert('发送错误');
+		}
+	});
+	return false;
+}
+function del(id){
+	if(confirm('确认删除此条记录吗?')){
+		location.href="/msg/del?id="+id;
+	}
+}
+</script>
+<div class="row" style='height: 93%'>
+      <div class="col-xs-1 col-sm-1 col-md-1">
+      </div>
+
+      <div class="col-xs-2 col-sm-2 col-md-2" style='background:yellow;height:100%'>
+      	<table height='100%' align='center'>
+      		<tr><td>关注的课程</td></tr>
+      		<tr><td>关注的讲师</td></tr>
+      		<tr><td>学习进度</td></tr>
+      		<tr><td>同学圈</td></tr>
+      		<tr><td>
+      		<% if(loginbean.role==1){ %>
+      			<a href='#' onclick='apply()'>申请成为讲师</a>
+      		<% }else if(loginbean.role==2){ %>
+      			<a href='#'>讲师资格审核中</a>
+      		<% }else if(loginbean.role==3){ %>
+      			<a href='/teacher/'>我的教学</a>
+      		<% } %>
+      		</td></tr>
+      	</table>
+      </div>
+
+      <div id='main' class="col-xs-8 col-sm-8 col-md-8" style='border: 1px solid green;height:100%'>
+      		<table class="table table-condensed">
+			  <caption>讲师申请列表</caption>
+			  <tbody>
+			  	<thead>
+				    <tr>
+				      <th>发送者</th>
+				      <th>消息内容</th>
+				      <th>发送时间</th>
+				      <th>
+				      		操作&nbsp;
+				      		<button type="button" class="btn btn-success" onclick='sendMsg()'>发消息</button>
+
+				      </th>
+				    </tr>
+				  </thead>
+			  	<% msgrs.forEach(function(item){ %>
+			    <tr>
+			      <td>
+			      		<%-item.sendname%>
+			      </td>
+			      <td>
+			      		<%-item.message%>
+			      </td>
+			      <td>
+			      		<%-item.sendtime.getFullYear()%>年<%-(item.sendtime.getMonth()+1)%>月<%-item.sendtime.getDate()%>日
+			      		<%-item.sendtime.getHours()%>:<%-item.sendtime.getMinutes()%>
+			      </td>
+			      <td>
+			      		<button type="button" class="btn btn-warning" onclick='reply("<%-item.send%>","<%-item.sendname%>")'>回复</button>&nbsp;
+			      		<button type="button" class="btn btn-warning" onclick='del("<%-item._id%>")'>删除</button>
+			      </td>
+			    </tr>
+			    <% })%>
+			  </tbody>
+			</table>
+      </div>
+
+      <div class="col-xs-1 col-sm-1 col-md-1">
+      </div>
+</div>
+
+<div class="modal fade" id="msgModal">
+    <div class="modal-dialog">
+        <div class="modal-content" id='replydiv' style='display:none'>
+        	<div class="modal-header" style='text-align: center'>
+        		回复:<span id='replyname'></span>
+        	</div>
+        	<div class="modal-body" style='text-align: center'>
+	            <form id='replyform' name='replyform' onsubmit="return replySub();">
+	            <textarea cols='76' rows='9' name='message'></textarea><br/>
+	            <input type='hidden' name='rid'/>
+	            <input type='submit' value='回复'/>&nbsp;
+	            <input type='button' value='取消'/>
+	            </form>
+            </div>
+            <div class="modal-footer" style='text-align:center'>
+            	&nbsp;
+            </div>
+        </div><!-- /.modal-content -->
+        <div class="modal-content" id='senddiv'>
+        	<div class="modal-header" style='text-align: center'>
+        	发送消息
+        	</div>
+        	<div class="modal-body" style='text-align: center'>
+	            <form id='sendform' name='sendform' onsubmit="return sendSub();">
+	            接受者昵称:<input type="text" placeholder="请输入昵称" name='nicheng'/><br/><br/>
+	            <textarea cols='76' rows='9' name='message'></textarea><br/>
+	            <input type='submit' value='发送'/>&nbsp;
+	            <input type='button' value='取消'/>
+	            </form>
+            </div>
+            <div class="modal-footer" style='text-align:center'>
+            	&nbsp;
+            </div>
+        </div>
+    </div><!-- /.modal -->
+<% include footer %>

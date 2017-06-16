@@ -1,0 +1,51 @@
+<% include header %>
+	<div class="row">
+      <div class="col-xs-6 col-sm-1 col-md-1">
+      </div>
+      <div class="col-xs-6 col-sm-10 col-md-10">
+      
+   <form method='post' action='/teacher/pubcourse' enctype="multipart/form-data">
+	<table class="table table-condensed table-bordered">
+	  <caption>发布课程</caption>
+	  <tbody>
+	    <tr>
+	      <td align='right'>课程名称:</td>
+	      <td><input type="text" name='title' class="form-control" placeholder="课程名称"></td>
+	    </tr>
+	    <tr>
+	      <td align='right'>课程分类:</td>
+	      <td>
+	      		<select name='type'>
+	      			<option value='1'>java</option>
+	      			<option value='2'>php</option>
+	      			<option value='3'>c/c++</option>
+	      			<option value='4'>node</option>
+	      			<option value='5'>javascript</option>
+	      		</select>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td align='right'>课程图标:</td>
+	      <td><input type="file" name='cphoto' class="form-control"></td>
+	    </tr>
+	    <tr>
+	      <td align='right'>课程简介:</td>
+	      <td>
+	      		<textarea name='brief' cols='110' rows='8'></textarea>
+	      </td>
+	    </tr>
+	    
+	    <tr>
+	      <td colspan='2' align='center'>
+	      		<input type='submit' value='发布课程'/>
+	      </td>
+	    </tr> 
+	  </tbody>
+	</table>
+</form>
+	</div>
+	<div class="col-xs-6 col-sm-1 col-md-1">
+      </div>
+</div>
+
+<% include footer %>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+    <script src="/javascripts/jquery-2.1.4.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css?v=1.0"/>
+    <script  src="http://webapi.amap.com/maps?v=1.3&key=ebb3310e602e7027987911af5e30be56"></script>
+	<style>
+		.sideBar{
+			text-align: center;
+			margin-top:-21px;
+		}
+		.map{
+			font-size:18px;
+			margin-top:-20px;
+		}
+		.mapH{
+			height:600px;
+			width:auto;
+		}
+		.map li span{
+			font-size:14px;
+			color:red;
+		}
+		#pubshop{
+			width:100px;
+			height:auto;
+			
+		}
+	</style>
+</head>
+<body>
+<%include ../ui/head%>
+<div class='row'>
+	<div class='col-sm-3 col-md-3 sideBar '>
+	  	<% include sideBar %>
+	</div>
+	
+	<div class='col-sm-9 col-md-9'>
+		<ul class="list-group map">
+			<li class="list-group-item">
+				<span>
+					找到地图中准确位置，点击建立营业点
+				</span>
+			</li>
+			<li class="list-group-item mapH">
+				<div id="mapContainer">
+			
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+	<!--模态框-->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+	    	<div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel">填写租赁点信息</h4>
+	            </div>
+	            <div class="modal-body">
+	              	<form role="form" name='pubform' action='/userHome/pubShop' onsubmit='return onSubPub();' method='post' enctype="multipart/form-data">
+					  	<div class="form-group">
+					    	<label for="name">请输入租赁点名称</label>
+					    	<input type="text" class="form-control"  name="shopname" placeholder="请输入租赁点名称">
+					  	</div>
+					  	<div class="form-group">
+					    	<label for="name">请输入租赁点简介</label>
+					    	<textarea class="form-control" rows="5" placeholder="请输入租赁点简介" name='shopintr'></textarea>
+					  	</div>
+					  	<div class="form-group">
+					    	<label for="name">请输入查询关键词</label>
+					    	<input type="text" class="form-control"  name="keywords" placeholder="请输入查询关键词">
+					  	</div>
+					  	
+					  	<div class="form-group">
+					    	<label for="name">请选择类型</label>
+					    	<select class="form-control" name='shoptype'>
+						       <option value='0'>请选择经营类别</option>
+						       <option value='1'>11</option>
+						       <option value='2'>12</option>
+						       <option value='3'>13</option>
+						       <option value='4'>14</option>
+						       <option value='5'>15</option>
+					    	</select>
+					  	</div>
+					  	<div class="form-group">
+					    	<label for="name">租赁点图片</label>
+					    	<input type="file"  name='photourl' onChange='pubShop(this,"pubshop")'>
+					    	<img  id='pubshop'/>
+					  	</div>
+					  	<div class="form-group">
+					    	<label for="name" class='sr-only'>经纬度</label>
+					    	<input type='hidden' name='lng'>
+						    <input type='hidden' name='lat'>
+					  	</div>
+					  	<hr />
+					  	<div align="center">
+					  		<button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>&nbsp;&nbsp;
+							<input type="submit" class="btn btn-success" value='提交'></input>
+					  	</div>
+					</form>
+	            </div>
+	    	</div>
+		</div>
+	</div>	
+</div>
+<script>
+//--------------------------发布店铺消息，显示图片----------------------
+function pubShop(thisa,imgId){
+    if (typeof FileReader === 'undefined') {  
+        alert('你的浏览器不支持FileReader接口！');  
+        return;  
+    }
+    var file = thisa.files[0];
+    if(!/image\/\w+/.test(file.type)){  
+        alert("看清楚,这个需要图片！"); 
+        return false;
+    }
+    var reader = new FileReader();  
+    //将文件以Data URL形式读入页面  
+    reader.readAsDataURL(file);
+    reader.onload=function(e){  
+        //显示文件  
+	        var img = document.getElementById(imgId);
+	        img.src = this.result;
+	    }
+}
+//---------------用户认证-------------------------------------------------
+function checkPer(){
+	$('#checkPer').load('/home/checkPer.html');
+}
+//---------------提交店铺信息			
+function onSubPub(){
+	if(pubform.shopname.value==''){
+		alert('营业点名称不允许空');
+		pubform.shopname.focus();
+		return false;
+	}
+	if(pubform.shopintr.value==''){
+		alert('营业点简介不允许空');
+		pubform.shopintr.focus();
+		return false;
+	}
+	if(pubform.shoptype.value==0){
+		alert('请选择营业类别');
+		pubform.shoptype.focus();
+		return false;
+	}
+	return true;
+}
+//----------------------初始化地图对象，加载地图
+var map = new AMap.Map('mapContainer', {
+//默认中心是天安门。
+	view: new AMap.View2D({
+		center: new AMap.LngLat(116.397428, 39.90923),
+		zoom: 18
+	})
+	
+});
+//-----------------------定义右下角缩放比	
+AMap.plugin(['AMap.ToolBar','AMap.Scale','AMap.OverView'],
+    function(){
+        map.addControl(new AMap.ToolBar());
+
+        map.addControl(new AMap.Scale());
+
+        map.addControl(new AMap.OverView({isOpen:true}));
+});
+//------------------------给地图添加事件监听	
+var evt=null;
+function eventHandler(event){
+	evt = event;
+	pubform.lng.value = evt.lnglat.getLng();
+	pubform.lat.value = evt.lnglat.getLat();
+	
+	$('#myModal').modal('show');
+}
+var listener = AMap.event.addListener(map,"click",eventHandler);
+
+</script>
+</body>
+</html>

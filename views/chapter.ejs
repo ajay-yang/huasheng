@@ -1,0 +1,150 @@
+<% include header %> 
+<script type="text/javascript" src="/xheditor/xheditor-1.2.2.min.js"></script> 
+<script type="text/javascript" src="/xheditor/xheditor_lang/zh-cn.js"></script>
+<script type="text/javascript">
+	var editor;
+	$(pageInit); 
+	function pageInit() 
+	{ 
+	    $.extend(XHEDITOR.settings,{shortcuts:{'ctrl+enter':submitForm}});  
+    	editor=$(chapterForm.content).xheditor({html5Upload:false,upMultiple:'1',upLinkUrl:"../upload/upfile",upLinkExt:"zip,rar,txt",upImgUrl:"../upload/upimg",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"/uploadFlash",upFlashExt:"swf",upMediaUrl:"/uploadMedia",upMediaExt:"wmv,avi,wma,mp3,mid"});  
+	}
+	function insertUpload(arrMsg)  
+	{  
+	    var i,msg;  
+	    for(i=0;i<arrMsg.length;i++)  
+	    {  
+	        msg=arrMsg[i];  
+	        $("#uploadList").append('<option value="'+msg.id+'">'+msg.localname+'</option>');  
+	    }  
+	}  
+	function submitForm(){
+		$(chapterForm).submit();
+	}  
+	function addNew(){
+		chapterForm.reset();
+		chapterForm.action = '/teacher/addchapter';
+		chapterForm.subBtn.value='创建';
+		$('#addtr').show();
+	}
+	function fold(){
+		$('#addtr').hide();
+	}
+	function addSub(){
+		chapterForm.chapterurl.value=location.href;
+		return true;
+	}
+	function updChapter(chapterid){
+		chapterForm.action = '/teacher/updchapter';
+		$.get('/teacher/getChapter?chapterid='+chapterid,function(jsonRs){
+			chapterForm.chapterid.value=jsonRs.id;
+			chapterForm.title.value = jsonRs.title;
+			//chapterForm.content.value=jsonRs.content;
+			editor.setSource(jsonRs.content);
+			chapterForm.subBtn.value='修改';
+			$('#addtr').show();
+			//let xhe = $(chapterForm.content).xheditor;
+		})
+	}
+	function delChapter(chapterid,chaptertitle){
+		if(confirm('确定删除'+chaptertitle+'?')){
+			location.href="/teacher/delchapter?chapterid="+chapterid+"&url="+location.href;
+		}
+	}
+</script>
+<div class="row">
+      <div class="col-xs-6 col-sm-1 col-md-1">
+      </div>
+      <div class="col-xs-6 col-sm-10 col-md-10">
+			<table class="table table-condensed">
+			  <caption style='text-align: center;font-size:2em;color:#000'><%-title%>
+			  	<button type="button" class="btn btn-success" onclick='addNew()' style='position: relative;left:240px'>创建新章节</button>
+			  </caption>
+			  <tbody>
+			  	<tr id='addtr' style='display:none'>
+			  		<td colspan='2' align='center'>
+			  		<form name='chapterForm' id='chapterForm' action='/teacher/addchapter' method='post' onsubmit="return addSub();">
+					  	<table class="table table-condensed" style='width:1024px'>
+						  	<tr>
+						  		<td align='right'>
+						  			章节名称
+						  		</td>
+						  		<td>
+						  			<input type='text' name='title'/>
+						  		</td>
+						  	</tr>
+						  	<tr>
+						  		<td align='right'>
+						  			章节内容
+						  		</td>
+						  		<td>
+						  			<textarea name='content' cols='67' rows='6'></textarea>
+						  		</td>
+						  	</tr>
+						  	<tr>
+						  		<td align='right'>相关下载</td>
+						  		<td>&nbsp;</td>
+						  	</tr>
+						  	<tr>
+						  		<td colspan='2' align='center'>
+						  			<input type='hidden' name='courseid' value='<%-cid%>'/>
+						  			<input type='hidden' name='chapterid'/>
+						  			<input type='hidden' name='chapterurl'/>
+						  			<input type='submit' value='创建' name='subBtn'/>&nbsp;
+						  			<input type='button' value='收起' onclick='fold()'/>
+						  		</td>
+						  	</tr>
+					  	</table>
+					  	</form>
+					 </td>
+				</tr>
+			    <tr>
+			      <th>章节名称</th>
+			      <th>
+			      	操作
+			      	
+			      </th>
+			    </tr>
+			    <% coursers.forEach(function(item){ %>
+			    <tr>
+			      <td>
+			      		<%-item.title%>
+			      </td>
+			      <td>
+			      		<a href='./showchapter?chapterid=<%-item._id%>'target='_blank'>查看</a>&nbsp;
+			      		<a href='#' onclick="updChapter('<%-item._id%>')">修改</a>&nbsp;
+			      		<a href='#' onclick='delChapter("<%-item._id%>","<%-item.title%>")'>删除</a>&nbsp;
+			      </td>
+			    </tr>
+			    <% })%>
+			    <tr>
+			    	<td colspan='2' align='center'>
+			    		共记:<%-countrs%>条,
+			    		第<%-page%>/<%-sumpage%>页,
+			    		<% if(page>1){ %>
+			    		<a href='/teacher/chapter?id=<%-cid%>&title=<%-title%>&page=1'>首页</a>&nbsp;
+			    		<a href='/teacher/chapter?id=<%-cid%>&title=<%-title%>&page=<%-(page-1)%>'>上一页</a>&nbsp;
+			    		<% } %>
+			    		<% if(page<sumpage){ %>
+			    		<a href='/teacher/chapter?id=<%-cid%>&title=<%-title%>&page=<%-(page+1)%>'>下一页</a>&nbsp;
+			    		<a href='/teacher/chapter?id=<%-cid%>&title=<%-title%>&page=<%-sumpage%>'>尾页</a>
+			    		<% } %>
+			    		<%
+			    			if(sumpage>1){
+			    				for(i=1;i<=sumpage;i++){
+			    					%>
+			    					<a href='/teacher/chapter?id=<%-cid%>&title=<%-title%>&page=<%-i%>'><%-i%></a>&nbsp;
+			    					<%
+			    				}
+			    			}
+			    		%>
+			    	</td>
+			    </tr> 
+			  </tbody>
+			</table>
+
+		</div>
+		<div class="col-xs-6 col-sm-1 col-md-1">
+      </div>
+</div>
+<% include footer %>

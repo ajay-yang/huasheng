@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+    <script src="/javascripts/jquery-2.1.4.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+		.sideBar{
+			text-align: center;
+			margin-top:-21px;
+		}
+		.userPhoto{
+			background-color:#B5E61D;
+			height: 150px;
+		}
+		.userPhoto a{
+			background-size: cover;
+			background-image:url(../images/touX2.jpg);
+			border-radius: 50%;
+			margin:10px auto;
+			display: block;
+			width:110px;
+			height:110px;
+		}
+	</style>
+</head>
+<body>
+  	<%include ../ui/head%>
+  	<div class='row'>
+  		<div class='col-sm-3 col-md-3 sideBar '>
+		  	<ul class="list-group">
+				<li class="list-group-item userPhoto">
+					<a href="#">
+						
+					</a>
+				</li>
+				<li class="list-group-item">
+					<a href="#">消息</a>
+					<span class="badge">新</span>
+				</li>
+				<li class="list-group-item">
+					<a href='/adminHome/authList' >认证审核</a>
+				</li>
+				<li class="list-group-item">
+					<a href='/adminHome/authList' >认证审核</a>
+				</li>
+				<li class="list-group-item">
+					<a href='/adminHome/authList' >认证审核</a>
+				</li>
+			</ul>
+  		</div>
+  		
+  		<div class='col-sm-9 col-md-9'>
+  			
+  			
+  		</div>
+  	</div>
+</body>
+</html>

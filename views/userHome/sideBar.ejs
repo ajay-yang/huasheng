@@ -1,0 +1,45 @@
+<style>
+.userPhoto{
+	background-color:#B5E61D;
+	height: 150px;
+}
+.userPhoto a{
+	background-size: cover;
+	background-image:url(../images/meiN.png);
+	border-radius: 50%;
+	margin:10px auto;
+	display: block;
+	width:110px;
+	height:110px;
+}
+</style>
+<ul class="list-group">
+	<li class="list-group-item userPhoto">
+		<a href="#">
+			
+		</a>
+	</li>
+	<li class="list-group-item">
+		<a href="/userHome/">消息</a>
+		<span class="badge">新</span>
+	</li>
+	<% if(loginbean.role==1){ %>
+	<li class="list-group-item">
+		<a href='#' onclick='checkPer()'>身份认证</a>
+	</li>
+	<% }else if(loginbean.role==2){ %>
+	<li class="list-group-item">
+		<a href="#">身份正在认证中</a>
+	</li>
+	<% } else if(loginbean.role==3){%>
+	<li class="list-group-item">
+		<a href="/userHome/pubShop">发布商铺</a>
+		<span class="badge">新</span>
+	</li>
+	<% } else if(loginbean.role==4){%>
+	<li class="list-group-item">
+		<a href="/userHome/shopManage">管理商铺</a>
+		<span class="badge">新</span>
+	</li>
+	<% } %>
+</ul>

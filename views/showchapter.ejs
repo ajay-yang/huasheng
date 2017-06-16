@@ -1,0 +1,30 @@
+<% include header %>
+
+<div class="row">
+      <div class="col-xs-6 col-sm-1 col-md-1">
+      </div>
+      <div class="col-xs-6 col-sm-10 col-md-10">
+      <% if(rs){ %>
+      	<table class="table table-condensed">
+			  <caption style='text-align: center;font-size:2em;color:#000'>		<%-rs.title%>
+			  </caption>
+			  <tbody>
+			  <tr>
+			  	<td>
+			  	<%-rs.content%>
+			  	</td>
+			  </tr>
+			  <tr>
+			  	<td align='center'>
+			  		<button type="button" class="btn btn-warning" onclick='window.close();'>关闭窗口</button>
+			  	</td>
+			  </tr>
+			  </tbody>
+		</table>
+	   <%}%>
+      </div>
+      <div class="col-xs-6 col-sm-1 col-md-1">
+      </div>
+</div>
+
+<% include footer %>

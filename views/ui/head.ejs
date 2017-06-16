@@ -1,0 +1,113 @@
+
+<style>
+	ul li{
+		display: inline-block;
+		list-style: none;
+	}
+	.logo a{
+		display: inline-block;
+		margin-right:10px;
+		border-radius: 50%;
+		width:60px;
+		height:60px;
+		background-image: url(../images/logo.png);
+		background-size:cover;
+	}
+	.logoTitle a{
+		font-family:隶书;
+		font-size:32px;
+	}
+	.container-fluid{
+		background-color:cornflowerblue;
+	}
+	.logoZh li a{
+		text-decoration: none;
+		font-size:16px;
+		height:30px;
+		width:80px;
+	}
+	.logoZh li a:hover{
+		color:black;
+	}
+	.showUser{
+		margin-right:10px;
+		color:white;
+		font-size:16px;
+	}
+	.logoZh .Host{
+		color:yellow;
+	}
+	.dropdown-menu li{
+		height:35px;
+	}
+</style>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+    	
+	    <div class="nav navbar-nav navbar-left">
+	    	<ul>
+	    		<li class='logo'>
+	    			<a href="#" ></a>
+	    		</li>
+	    		
+	    		<li class='logoTitle'>
+	    			<a class="navbar-brand" href="#" style='color:black;'>华盛后台管理平台</a>
+	    		</li>
+	    	</ul>
+	    </div>
+		    
+	    <div class="navbar-form navbar-left" role="search" style='margin-top:20px;'>
+	        <form action='#' method='post'>
+	            <div class="form-group">
+	                <input type="text" class="form-control" placeholder="Search">
+	            </div>
+	            <button type="submit" class="btn btn-default">搜索</button>
+	        </form>
+    	</div>
+
+    	<div class="nav navbar-nav navbar-text navbar-right " style='margin-right:30px;margin-top:25px;'>
+    		<% if(loginbean){ %>
+    			<ul class='logoZh'>
+	    			<li class='showUser'>
+	    				<span>您好,&nbsp;</span>
+	    				<span class='Host'><%-loginbean.nicheng %>&nbsp;</span>
+	    			</li>
+	    			
+	    			<li class="btn-group">
+	    				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				    		个人中心
+					        <span class="caret"></span>
+					    </button>
+					    
+					    <ul class="dropdown-menu" role="menu">
+					        <li>
+					           <a href="/userHome/">
+			    					<span>消息</span>
+			    					<% if(loginbean.msgnum > 0){ %>
+			    					<span class='badge' style='background-color:green;'><%-loginbean.msgnum  %></span>
+			    					<%}%>
+					           </a>
+					        </li>
+					        <% if(loginbean.role > 0){ %>
+					        <li > 
+					            <a href='/userHome/'>我的空间</a>
+					        </li>
+					        <% }else{ %>
+					        <li>
+					           <a href='/adminHome/'>管理员空间</a>
+					        </li>
+				        	<% } %>
+					        <li class="divider"></li>
+					        <li>
+					            <a href="/users/logout">确认注销</a>
+					        </li>
+					    </ul>
+	    			</li>
+    			</ul>
+  
+				<% }else{ %>
+				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">登陆/注册</button>
+		<%  }%>
+    	</div>
+    </div>
+</nav>

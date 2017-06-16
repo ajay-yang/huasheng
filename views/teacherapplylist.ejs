@@ -1,0 +1,66 @@
+<script>
+	function pass(id){
+		$.get('/admin/pass?id='+id,function(rehtml){
+			if(rehtml==1){
+				$("#main").load('/admin/teacherapplylist');
+			}else{
+				alert('服务端出错');
+			}
+		});
+	}
+	function reject(id){
+		rejectform.rid.value=id;
+		$('#myModal').modal();
+	}
+	function rejectSub(){
+		$.post('/admin/reject',$('#rejectform').serialize(),function(rehtml){
+			if(rehtml==1){
+				$("#main").load('/admin/teacherapplylist');
+			}else{
+				alert('服务端出错');
+			}
+			$(".modal-backdrop").remove(); //消除遮罩层
+			$('#myModal').modal('hide');
+		});
+		return false;
+	}
+</script>
+<table class="table table-condensed">
+	  <caption>讲师申请列表</caption>
+	  <tbody>
+	  	<% rs.forEach(function(item){ %>
+	    <tr>
+	      <td>
+	      		<img src='../<%-item.photopath%>' width='120px'/><br/>
+	      		<%-item.realname%><br/>
+	      		<%-item.idnumber%>
+	      </td>
+	      <td><%-item.brief%></td>
+	      <td>
+	      <button type="button" class="btn btn-primary" onclick="pass('<%-item._id%>')">通过审核</button>&nbsp;
+	      <button type="button" class="btn btn-primary" onclick="reject('<%-item._id%>')">审核驳回</button>
+	      </td>
+	    </tr>
+	    <% }) %>
+	  </tbody>
+	</table>
+
+   <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        	<div class="modal-header" style='text-align: center'>
+        		驳回理由
+        	</div>
+        	<div class="modal-body" style='text-align: center'>
+	            <form id='rejectform' name='rejectform' onsubmit="return rejectSub();">
+	            <textarea cols='76' rows='9' name='reason'></textarea><br/>
+	            <input type='hidden' name='rid'/>
+	            <input type='submit' value='驳回'/>&nbsp;
+	            <input type='button' value='取消'/>
+	            </form>
+            </div>
+            <div class="modal-footer" style='text-align:center'>
+            	&nbsp;
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->

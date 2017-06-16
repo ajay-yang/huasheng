@@ -1,0 +1,38 @@
+<form method='post' action='/home/apply' enctype="multipart/form-data">
+	<table class="table table-condensed">
+	  <caption>讲师申请</caption>
+	  <tbody>
+	    <tr>
+	      <td align='right'>真实姓名:</td>
+	      <td><input type="text" name='realname' class="form-control" placeholder="真实姓名"></td>
+	    </tr>
+	    <tr>
+	      <td align='right'>身份证号:</td>
+	      <td><input type="text" name='idnumber' class="form-control" placeholder="身份证号"></td>
+	    </tr>
+	    <tr>
+	      <td align='right'>手持证件照:</td>
+	      <td><input type="file" name='photo' class="form-control"></td>
+	    </tr>
+	    <tr>
+	      <td align='right'>接受合同条款:</td>
+	      <td>
+	      		<a href='#'>查看合同</a>&nbsp;
+	      		<input type="checkbox" name='accept'>接受合同
+	      </td>
+	    </tr>
+	    <tr>
+	      <td align='right'>个人简介:</td>
+	      <td>
+	      		<textarea name='brief' cols='110' rows='8'></textarea>
+	      </td>
+	    </tr>
+	    
+	    <tr>
+	      <td colspan='2' align='center'>
+	      		<input type='submit' value='申请'/>
+	      </td>
+	    </tr> 
+	  </tbody>
+	</table>
+</form>

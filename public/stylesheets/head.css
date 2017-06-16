@@ -1,0 +1,40 @@
+<style>
+	ul li{
+		display: inline-block;
+		list-style: none;
+	}
+	.logo a{
+		display: inline-block;
+		margin-right:10px;
+		border-radius: 50%;
+		width:60px;
+		height:60px;
+		background-image: url(./images/logo.png) ;
+		background-size:cover;
+	}
+	.logoTitle a{
+		font-family:隶书;
+		font-size:32px;
+	}
+	.container-fluid{
+		background-color:cornflowerblue;
+	}
+	.logoZh li a{
+		text-decoration: none;
+		font-size:16px;
+		color:white;
+		height:30px;
+		width:80px;
+	}
+	.logoZh li a:hover{
+		color:black;
+	}
+	.showUser{
+		margin-right:10px;
+		color:white;
+		font-size:16px;
+	}
+	.logoZh .Host{
+		color:yellow;
+	}
+</style>
